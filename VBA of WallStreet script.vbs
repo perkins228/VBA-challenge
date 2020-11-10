@@ -25,6 +25,10 @@ For Each ws In Worksheets
 
 
     For i = 2 To lastrow
+        If ws.Cells(i, 2) < ws.Cells(i - 1, 2) Then
+            open_price = ws.Cells(i, 3)
+        End If
+        
         If ws.Cells(i + 1, 1) <> ws.Cells(i, 1) Then
             ticker = ws.Cells(i, 1)
             close_price = ws.Cells(i, 6)
@@ -45,8 +49,6 @@ For Each ws In Worksheets
             ws.Range("M" & chartrow) = total
             total = 0
             chartrow = chartrow + 1
-        ElseIf ws.Cells(i, 2) = WorksheetFunction.Min(ws.Range("B2:B" & i)) Then
-            open_price = ws.Cells(i, 3)
         Else
             total = total + ws.Cells(i, 7)
 
@@ -56,27 +58,21 @@ For Each ws In Worksheets
     
     lastticker = ws.Cells(Rows.Count, 10).End(xlUp).Row
     For i = 2 To lastticker
-        If ws.Cells(i, 12) = WorksheetFunction.Max(ws.Range("L2:L" & lastticker)) Then
-            ticker = ws.Cells(i, 10)
-            greatest = ws.Cells(i, 12)
-            ws.Range("P2") = ticker
+        If ws.Cells(i, 12) > ws.Range("Q2") Then
+            ws.Range("P2") = ws.Cells(i, 10)
             ws.Range("Q2").NumberFormat = "0.00%"
-            ws.Range("Q2") = greatest
+            ws.Range("Q2") = ws.Cells(i, 12)
         End If
-        
-        If ws.Cells(i, 12) = WorksheetFunction.Min(ws.Range("L2:L" & lastticker)) Then
-            ticker = ws.Cells(i, 10)
-            lowest = ws.Cells(i, 12)
-            ws.Range("P3") = ticker
+
+        If ws.Cells(i, 12) < ws.Range("Q3") Then
+            ws.Range("P3") = ws.Cells(i, 10)
             ws.Range("Q3").NumberFormat = "0.00%"
-            ws.Range("Q3") = lowest
+            ws.Range("Q3") = ws.Cells(i, 12)
         End If
-        
-        If ws.Cells(i, 13) = WorksheetFunction.Max(ws.Range("M2:M" & lastticker)) Then
-            ticker = ws.Cells(i, 10)
-            largest = ws.Cells(i, 13)
-            ws.Range("P4") = ticker
-            ws.Range("Q4") = largest
+
+        If ws.Cells(i, 13) > ws.Range("Q4") Then
+            ws.Range("P4") = ws.Cells(i, 10)
+            ws.Range("Q4") = ws.Cells(i, 13)
         End If
     Next i
 
